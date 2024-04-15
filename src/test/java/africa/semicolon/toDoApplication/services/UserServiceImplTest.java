@@ -1,6 +1,5 @@
 package africa.semicolon.toDoApplication.services;
 
-import africa.semicolon.toDoApplication.dto.CreateTaskResponse;
 import africa.semicolon.toDoApplication.dto.TaskRequest;
 import africa.semicolon.toDoApplication.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +22,7 @@ public class UserServiceImplTest {
 
     @Test
    public void testThatICanCreateTask() {
-        SignInRequest signInRequest = new SignInRequest();
-        signInRequest.setUsername("Username");
-        signInRequest.setPassword("password");
         TaskRequest taskRequest = new TaskRequest();
-        CreateTaskResponse createTaskResponse = new CreateTaskResponse();
         taskRequest.setTitle(taskRequest.getTitle());
         taskRequest.setDescription(taskRequest.getDescription());
         taskRequest.setDateCreated(taskRequest.getDateCreated());
@@ -35,29 +30,20 @@ public class UserServiceImplTest {
         assertEquals(1, userRepository.count());
     }
 
+
     @Test
-    public void signIn() {
-        SignInRequest signInRequest = new SignInRequest();
-        SignInResponse signInResponse = new SignInResponse();
-        //User user = new User();
-        signInRequest.setUsername("Username");
-        signInRequest.setPassword("password");
-        assertEquals(signInResponse, userService.signIn(signInRequest));
-
-    }
-
-    @Test void viewAllTasks() {
+    public void viewAllTasks() {
     }
 
     @Test
-    void findTaskByTitle() {
+    public void findTaskByTitle() {
     }
 
     @Test
-    void updateTask() {
+    public void updateTask() {
     }
 
     @Test
-    void deleteTask() {
+   public void deleteTask() {
     }
 }

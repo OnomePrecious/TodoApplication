@@ -1,9 +1,10 @@
 package africa.semicolon.toDoApplication.services;
 
-import africa.semicolon.toDoApplication.dto.CreateTaskResponse;
+import africa.semicolon.toDoApplication.dto.TaskResponse;
 import africa.semicolon.toDoApplication.dto.TaskRequest;
 import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
 import africa.semicolon.toDoApplication.exception.*;
+import africa.semicolon.toDoApplication.models.Status;
 import africa.semicolon.toDoApplication.models.Task;
 import africa.semicolon.toDoApplication.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,35 +19,44 @@ import static africa.semicolon.toDoApplication.utils.Mappers.*;
 public class TaskServicesImpl implements TaskServices {
     @Autowired
     private TaskRepository taskRepository;
-    @Autowired
-private TaskServices taskServices;
     @Override
-    public CreateTaskResponse createTask(TaskRequest taskRequest) {
+    public TaskResponse createTask(TaskRequest taskRequest) {
         Task task = new Task();
         titleExist(taskRequest.getTitle());
         mapCreateTaskRequest(taskRequest, task);
         taskRequest.setDateCreated(taskRequest.getDateCreated());
+        task.setStatus(Status.STARTED);
         taskRepository.save(task);
         return mapTaskResponse(task);
     }
-
-    private void titleExist(String title) {
-        var task = taskServices.findTaskByTitle(title);
+    @Override
+    public TaskResponse incompleteTask(TaskRequest taskRequest){
+        Task foundTask = taskRepository.findTaskByTitle(taskRequest.getTitle());
+        foundTask.setStatus(Status.INCOMPLETE);
+        return mapTaskResponse(foundTask);
+    }
+    @Override
+    public TaskResponse completedTask(TaskRequest taskRequest){
+        Task foundTask = taskRepository.findTaskByTitle(taskRequest.getTitle());
+        foundTask.setStatus(Status.COMPLETED);
+        return mapTaskResponse(foundTask);
+    }
+        private void titleExist(String title) {
+        var task = taskRepository.findTaskByTitle(title);
         if (task.getTitle().equals(title))
             throw new TitleAlreadyExistsException("Title already exists");
     }
-
-    public String deleteTask(String title) {
-        Task task = taskRepository.findTaskByTitle(title);
-        if (task != null) {
-            taskRepository.delete(task);
-            return "Successfully deleted";
-        } else {
-            throw new UnableToDeleteTaskException("task not found");
-        }
+    @Override
+    public TaskResponse deleteTask(TaskRequest taskRequest) {
+        var task = taskRepository.findTaskByTitle(taskRequest.getTitle());
+        if(task == null) throw new UnableToDeleteTaskException("no task available for deletion");
+        taskRepository.deleteById(task.getId());
+        taskRepository.delete(task);
+        return mapTaskResponse(task);
     }
 
-    public CreateTaskResponse updateTask(UpdateTaskRequest updateTaskRequest) {
+    @Override
+        public TaskResponse updateTask(UpdateTaskRequest updateTaskRequest) {
         var task = taskRepository.findTaskByTitle(updateTaskRequest.getTitle());
         if (task.getTitle().equals(updateTaskRequest.getTitle())) {
             mapUpdateTaskRequest(updateTaskRequest, task);
@@ -59,18 +69,18 @@ private TaskServices taskServices;
             throw new ErrorUpdatingTaskException("update task error");
         }
     }
-
-    public Task findTaskByTitle(String title) {
+        @Override
+        public Task findTaskByTitle(String title) {
         var task = taskRepository.findTaskByTitle(title);
         if (task.getTitle().equals(title)) {
-            return taskServices.findTaskByTitle(title);
+            return taskRepository.findTaskByTitle(title);
         } else {
             throw new InvalidTitleException("This title does not exist");
         }
     }
 
-    @Override
-    public List<Task> findAllTask() {
+        @Override
+        public List<Task> findAllTask() {
         return taskRepository.findAll();
     }
 

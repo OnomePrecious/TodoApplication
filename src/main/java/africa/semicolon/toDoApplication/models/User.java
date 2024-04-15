@@ -16,5 +16,4 @@ public class User {
     private String password;
     @DBRef
     private List<Task> taskList;
-
 }

@@ -1,20 +1,20 @@
 package africa.semicolon.toDoApplication.services;
 
 import africa.semicolon.toDoApplication.dto.TaskRequest;
-import africa.semicolon.toDoApplication.dto.CreateTaskResponse;
+import africa.semicolon.toDoApplication.dto.TaskResponse;
 import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
 import africa.semicolon.toDoApplication.models.Task;
 
-import java.util.List;
-
 public interface UserService {
-    CreateTaskResponse createTask(TaskRequest taskRequest);
+    TaskResponse createTask(TaskRequest taskRequest);
 
-    List<Task> viewAllTasks(String username);
+    TaskResponse incompleteTask(TaskRequest taskRequest);
+
+    TaskResponse completedTask(TaskRequest taskRequest);
 
     Task findTaskByTitle(String title);
 
-    CreateTaskResponse updateTask(UpdateTaskRequest updateTaskRequest);
+    TaskResponse updateTask(UpdateTaskRequest updateTaskRequest);
 
-    String deleteTask(String title);
+    TaskResponse deleteTask(TaskRequest taskRequest);
 }

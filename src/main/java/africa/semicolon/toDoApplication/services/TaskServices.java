@@ -1,6 +1,6 @@
 package africa.semicolon.toDoApplication.services;
 
-import africa.semicolon.toDoApplication.dto.CreateTaskResponse;
+import africa.semicolon.toDoApplication.dto.TaskResponse;
 import africa.semicolon.toDoApplication.dto.TaskRequest;
 import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
 import africa.semicolon.toDoApplication.models.Task;
@@ -8,11 +8,15 @@ import africa.semicolon.toDoApplication.models.Task;
 import java.util.List;
 
 public interface TaskServices {
-    CreateTaskResponse createTask(TaskRequest taskRequest);
+    TaskResponse createTask(TaskRequest taskRequest);
 
-    String deleteTask(String title);
+    TaskResponse incompleteTask(TaskRequest taskRequest);
 
-    CreateTaskResponse updateTask(UpdateTaskRequest updateTaskRequest);
+    TaskResponse completedTask(TaskRequest taskRequest);
+
+    TaskResponse deleteTask(TaskRequest taskRequest);
+
+    TaskResponse updateTask(UpdateTaskRequest updateTaskRequest);
 
     Task findTaskByTitle(String title);
     List<Task> findAllTask();

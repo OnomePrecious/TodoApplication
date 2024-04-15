@@ -1,12 +1,11 @@
 package africa.semicolon.toDoApplication.utils;
 
-import africa.semicolon.toDoApplication.dto.CreateTaskResponse;
+import africa.semicolon.toDoApplication.dto.TaskResponse;
 import africa.semicolon.toDoApplication.dto.TaskRequest;
 import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
 import africa.semicolon.toDoApplication.models.Task;
-import africa.semicolon.toDoApplication.models.User;
-import africa.semicolon.toDoApplication.repository.TaskRepository;
-import africa.semicolon.toDoApplication.repository.UserRepository;
+
+import java.time.LocalDateTime;
 
 public class Mappers {
         public static TaskRequest mapCreateTaskRequest(TaskRequest taskRequest, Task task) {
@@ -15,12 +14,12 @@ public class Mappers {
         taskRequest.setDateCreated(task.getDateCreated());
         return taskRequest;
     }
-public static CreateTaskResponse mapTaskResponse(Task task){
-        CreateTaskResponse createTaskResponse = new CreateTaskResponse();
-        createTaskResponse.setTitle(task.getTitle());
-        createTaskResponse.setDescription(task.getDescription());
-        createTaskResponse.setDateCreated(task.getDateCreated());
-        return createTaskResponse;
+public static TaskResponse mapTaskResponse(Task task){
+        TaskResponse taskResponse = new TaskResponse();
+        taskResponse.setTitle(task.getTitle());
+        taskResponse.setDescription(task.getDescription());
+        taskResponse.setDateCreated(LocalDateTime.now());
+        return taskResponse;
 }
 public static void mapUpdateTaskRequest(UpdateTaskRequest updateTaskRequest, Task task){
                 updateTaskRequest.setTitle(task.getTitle());
@@ -29,5 +28,6 @@ public static void mapUpdateTaskRequest(UpdateTaskRequest updateTaskRequest, Tas
 
 
 }
+
 
 }

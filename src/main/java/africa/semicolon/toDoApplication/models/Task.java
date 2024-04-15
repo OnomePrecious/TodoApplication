@@ -15,5 +15,6 @@ public class Task {
     private String id;
     private String title;
     private String description;
+    private Status status;
     private LocalDateTime dateCreated;
 }

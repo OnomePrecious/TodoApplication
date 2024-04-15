@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 @Data
 
-public class CreateTaskResponse {
+public class TaskResponse {
         private String title;
         private String description;
         private LocalDateTime dateCreated;

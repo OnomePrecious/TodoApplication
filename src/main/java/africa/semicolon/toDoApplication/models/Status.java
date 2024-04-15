@@ -1,6 +1,7 @@
 package africa.semicolon.toDoApplication.models;
 
 public enum Status {
-COMPLETED,
+    STARTED,
+    COMPLETED,
     INCOMPLETE,
 }
