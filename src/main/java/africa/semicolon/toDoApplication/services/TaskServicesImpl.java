@@ -4,9 +4,9 @@ import africa.semicolon.toDoApplication.dto.TaskResponse;
 import africa.semicolon.toDoApplication.dto.TaskRequest;
 import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
 import africa.semicolon.toDoApplication.exception.*;
-import africa.semicolon.toDoApplication.models.Status;
-import africa.semicolon.toDoApplication.models.Task;
-import africa.semicolon.toDoApplication.repository.TaskRepository;
+import africa.semicolon.toDoApplication.data.models.Status;
+import africa.semicolon.toDoApplication.data.models.Task;
+import africa.semicolon.toDoApplication.data.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

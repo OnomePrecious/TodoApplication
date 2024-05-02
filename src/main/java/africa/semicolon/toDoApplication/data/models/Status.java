@@ -1,4 +1,4 @@
-package africa.semicolon.toDoApplication.models;
+package africa.semicolon.toDoApplication.data.models;
 
 public enum Status {
     STARTED,

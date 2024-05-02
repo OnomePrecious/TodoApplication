@@ -3,7 +3,7 @@ package africa.semicolon.toDoApplication.services;
 import africa.semicolon.toDoApplication.dto.TaskResponse;
 import africa.semicolon.toDoApplication.dto.TaskRequest;
 import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
-import africa.semicolon.toDoApplication.models.Task;
+import africa.semicolon.toDoApplication.data.models.Task;
 
 import java.util.List;
 

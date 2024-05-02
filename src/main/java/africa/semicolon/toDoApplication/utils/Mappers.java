@@ -1,9 +1,8 @@
 package africa.semicolon.toDoApplication.utils;
 
-import africa.semicolon.toDoApplication.dto.TaskResponse;
-import africa.semicolon.toDoApplication.dto.TaskRequest;
-import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
-import africa.semicolon.toDoApplication.models.Task;
+import africa.semicolon.toDoApplication.data.models.User;
+import africa.semicolon.toDoApplication.dto.*;
+import africa.semicolon.toDoApplication.data.models.Task;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +27,28 @@ public static void mapUpdateTaskRequest(UpdateTaskRequest updateTaskRequest, Tas
 
 
 }
+public static void mapRegisteredResponse(RegisterRequest request, User user) {
+            user.setUsername(request.getUsername());
+            user.setEmail(request.getEmail());
+            user.setPassword(request.getPassword());
+    }
+public static RegisterResponse mapUserToRegisterResponse(User user){
+            RegisterResponse registerResponse = new RegisterResponse();
+            registerResponse.setUsername(user.getUsername());
+            registerResponse.setMessage("Registered successfully");
+            return registerResponse;
+}
 
+public static LogInResponse mapLoginResponse(User user, LogInResponse logInResponse) {
+            user.setUsername(logInResponse.getUsername());
+            user.setTaskList(logInResponse.getTaskList());
 
+    return logInResponse;
+}
+public static LogInResponse mapUserToLogInResponse(User user){
+            LogInResponse logInResponse = new LogInResponse();
+            logInResponse.setUsername(user.getUsername());
+            logInResponse.setMessage("Logged in successfully");
+            return logInResponse;
+}
 }
