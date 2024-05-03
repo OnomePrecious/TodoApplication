@@ -3,7 +3,6 @@ package africa.semicolon.toDoApplication.services;
 import africa.semicolon.toDoApplication.data.models.User;
 import africa.semicolon.toDoApplication.data.repository.UserRepository;
 import africa.semicolon.toDoApplication.dto.*;
-import africa.semicolon.toDoApplication.data.models.Task;
 import africa.semicolon.toDoApplication.exception.UnableToLogInException;
 import africa.semicolon.toDoApplication.exception.UnableToLogOutException;
 import africa.semicolon.toDoApplication.exception.UsernameAlreadyExistException;
@@ -15,7 +14,7 @@ import static africa.semicolon.toDoApplication.utils.Mappers.*;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    private TaskServices taskServices;
+    private TaskService taskService;
     @Autowired
     private UserRepository userRepository;
 
@@ -41,7 +40,7 @@ public class UserServiceImpl implements UserService {
         if(user.getPassword().equalsIgnoreCase(loginRequest.getPassword())) user.setLoggedIn(true);
         else throw new UnableToLogInException("Invalid username or password");
         userRepository.save(user);
-        return mapLoginResponse(user, logInResponse);
+        return mapLogInResponse(user, logInResponse);
     }
 
     @Override
@@ -51,37 +50,10 @@ public class UserServiceImpl implements UserService {
         if(user.getUsername().equals(logInRequest.getUsername())) user.setLoggedIn(false);
         else throw new UnableToLogOutException("Unable to log out");
         userRepository.save(user);
-        return mapLoginResponse(user, logInResponse);
+        return mapLogInResponse(user, logInResponse);
     }
 
 
-    @Override
-    public TaskResponse createTask(TaskRequest taskRequest) {
-
-        return taskServices.createTask(taskRequest);
-    }
-@Override
-public TaskResponse incompleteTask(TaskRequest taskRequest){
-        return taskServices.incompleteTask(taskRequest);
-}
-@Override
-public TaskResponse completedTask(TaskRequest taskRequest){
-        return taskServices.completedTask(taskRequest);
-}
-    @Override
-    public Task findTaskByTitle(String title) {
-
-        return taskServices.findTaskByTitle(title);
-    }
-
-    @Override
-    public TaskResponse updateTask(UpdateTaskRequest updateTaskRequest) {
-        return taskServices.updateTask(updateTaskRequest);
-    }
-    @Override
-    public TaskResponse deleteTask(TaskRequest taskRequest){
-        return taskServices.deleteTask(taskRequest);
-    }
 
 }
 

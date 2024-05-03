@@ -1,5 +1,6 @@
 package africa.semicolon.toDoApplication.services;
 
+import africa.semicolon.toDoApplication.data.repository.UserRepository;
 import africa.semicolon.toDoApplication.dto.TaskResponse;
 import africa.semicolon.toDoApplication.dto.TaskRequest;
 import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
@@ -16,59 +17,60 @@ import java.util.List;
 import static africa.semicolon.toDoApplication.utils.Mappers.*;
 
 @Service
-public class TaskServicesImpl implements TaskServices {
+public class TaskServicesImpl implements TaskService {
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Override
     public TaskResponse createTask(TaskRequest taskRequest) {
         Task task = new Task();
-        titleExist(taskRequest.getTitle());
-        mapCreateTaskRequest(taskRequest, task);
-        taskRequest.setDateCreated(taskRequest.getDateCreated());
-        task.setStatus(Status.STARTED);
+        var user = userRepository.findUserByUsername(taskRequest.getUsername());
+        if(user == null) throw new UserNotFoundException("user not found");
+        if(!user.isLoggedIn()) throw new UserNotLoggedInException("user not logged in");
+       mapTaskRequest(taskRequest,task);
         taskRepository.save(task);
-        return mapTaskResponse(task);
+        userRepository.save(user);
+        return mapCreateTaskRequest(task);
     }
     @Override
     public TaskResponse incompleteTask(TaskRequest taskRequest){
         Task foundTask = taskRepository.findTaskByTitle(taskRequest.getTitle());
         foundTask.setStatus(Status.INCOMPLETE);
-        return mapTaskResponse(foundTask);
+        return mapCreateTaskRequest(foundTask);
     }
     @Override
     public TaskResponse completedTask(TaskRequest taskRequest){
         Task foundTask = taskRepository.findTaskByTitle(taskRequest.getTitle());
         foundTask.setStatus(Status.COMPLETED);
-        return mapTaskResponse(foundTask);
+        return mapCreateTaskRequest(foundTask);
     }
-        private void titleExist(String title) {
-        var task = taskRepository.findTaskByTitle(title);
-        if (task.getTitle().equals(title))
-            throw new TitleAlreadyExistsException("Title already exists");
-    }
+
+
     @Override
     public TaskResponse deleteTask(TaskRequest taskRequest) {
         var task = taskRepository.findTaskByTitle(taskRequest.getTitle());
         if(task == null) throw new UnableToDeleteTaskException("no task available for deletion");
         taskRepository.deleteById(task.getId());
         taskRepository.delete(task);
-        return mapTaskResponse(task);
+        return mapCreateTaskRequest(task);
     }
+
+
 
     @Override
         public TaskResponse updateTask(UpdateTaskRequest updateTaskRequest) {
-        var task = taskRepository.findTaskByTitle(updateTaskRequest.getTitle());
-        if (task.getTitle().equals(updateTaskRequest.getTitle())) {
-            mapUpdateTaskRequest(updateTaskRequest, task);
-            task.setTitle(updateTaskRequest.getTitle());
-            task.setDescription(updateTaskRequest.getDescription());
-            task.setDateCreated(LocalDateTime.now());
-            taskRepository.save(task);
-            return mapTaskResponse(task);
-        } else {
-            throw new ErrorUpdatingTaskException("update task error");
-        }
+        var task = taskRepository.findTaskById(updateTaskRequest.getId());
+         if(task == null) throw new TaskNotFoundException("Task not found");
+        mapUpdateTaskRequest(updateTaskRequest, task);
+         taskRepository.save(task);
+        var user = userRepository.findUserByUsername(updateTaskRequest.getUsername());
+        if(!user.isLoggedIn())throw new UserNotLoggedInException("user is not logged in");
+        userRepository.save(user);
+            return mapCreateTaskRequest(task);
     }
+
+
         @Override
         public Task findTaskByTitle(String title) {
         var task = taskRepository.findTaskByTitle(title);
@@ -81,6 +83,7 @@ public class TaskServicesImpl implements TaskServices {
 
         @Override
         public List<Task> findAllTask() {
+
         return taskRepository.findAll();
     }
 

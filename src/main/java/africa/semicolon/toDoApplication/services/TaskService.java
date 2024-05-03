@@ -7,7 +7,7 @@ import africa.semicolon.toDoApplication.data.models.Task;
 
 import java.util.List;
 
-public interface TaskServices {
+public interface TaskService {
     TaskResponse createTask(TaskRequest taskRequest);
 
     TaskResponse incompleteTask(TaskRequest taskRequest);

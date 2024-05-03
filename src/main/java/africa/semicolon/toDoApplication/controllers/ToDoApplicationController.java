@@ -1,13 +1,15 @@
 package africa.semicolon.toDoApplication.controllers;
 
-import africa.semicolon.toDoApplication.dto.ApiResponse;
-import africa.semicolon.toDoApplication.dto.TaskRequest;
-import africa.semicolon.toDoApplication.dto.UpdateTaskRequest;
+import africa.semicolon.toDoApplication.data.models.Task;
+import africa.semicolon.toDoApplication.dto.*;
 import africa.semicolon.toDoApplication.exception.ErrorAccessingToDoAppException;
+import africa.semicolon.toDoApplication.services.TaskService;
 import africa.semicolon.toDoApplication.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -17,40 +19,77 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class ToDoApplicationController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private TaskService taskService;
+
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+        try {
+            var result = userService.register(registerRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+        } catch (ErrorAccessingToDoAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+
+    }
+
+    @PostMapping("/logIn")
+    public ResponseEntity<?> logIn(@RequestBody LogInRequest request) {
+        try {
+            var result = userService.logIn(request);
+            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+        } catch (ErrorAccessingToDoAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/logOut")
+    public ResponseEntity<?> logOut(@RequestBody LogInRequest request) {
+        try {
+            var result = userService.logOut(request);
+            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+        } catch (ErrorAccessingToDoAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
 
 
     @PostMapping("/create-task")
     public ResponseEntity<?> createTask(@RequestBody TaskRequest taskRequest) {
         try {
-            var result = userService.createTask(taskRequest);
+            var result = taskService.createTask(taskRequest);
             return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
         } catch (ErrorAccessingToDoAppException e) {
-            return new ResponseEntity<>(new ApiResponse(false,e.getMessage()), BAD_REQUEST);
-        }
-    }
-    @PostMapping("/incomplete-Task")
-    public ResponseEntity<?> incompleteTask(@RequestBody TaskRequest taskRequest){
-        try{
-            var result = userService.incompleteTask(taskRequest);
-            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
-        } catch (ErrorAccessingToDoAppException e){
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
         }
     }
+
+    @PostMapping("/incomplete-Task")
+    public ResponseEntity<?> incompleteTask(@RequestBody TaskRequest taskRequest) {
+        try {
+            var result = taskService.incompleteTask(taskRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+        } catch (ErrorAccessingToDoAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/completed-Task")
     public ResponseEntity<?> completedTask(@RequestBody TaskRequest taskRequest) {
         try {
-            var result = userService.completedTask(taskRequest);
+            var result = taskService.completedTask(taskRequest);
             return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
         } catch (ErrorAccessingToDoAppException e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
         }
 
     }
-        @PostMapping("/task-update")
+
+    @PutMapping("/task-update")
     public ResponseEntity<?> taskUpdate(@RequestBody UpdateTaskRequest updateTaskRequest) {
         try {
-            var result = userService.updateTask(updateTaskRequest);
+            var result = taskService.updateTask(updateTaskRequest);
             return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
         } catch (ErrorAccessingToDoAppException e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
@@ -60,19 +99,19 @@ public class ToDoApplicationController {
     @DeleteMapping("/delete-task")
     public ResponseEntity<?> taskDelete(@RequestBody TaskRequest taskRequest) {
         try {
-            var result = userService.deleteTask(taskRequest);
+            var result = taskService.deleteTask(taskRequest);
             return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
         } catch (ErrorAccessingToDoAppException e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
         }
     }
-    @GetMapping("/find-task")
-    public void findTask(@PathVariable String title){
+    @GetMapping("/findAllTask")
+    public ResponseEntity<?> findAllTask() {
         try {
-            userService.findTaskByTitle(title);
-        }catch (ErrorAccessingToDoAppException e){
-
+            List<Task> findAllTask = taskService.findAllTask();
+            return new ResponseEntity<>(new ApiResponse(true, findAllTask), CREATED);
+        } catch (ErrorAccessingToDoAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
     }
 }
-    }
-

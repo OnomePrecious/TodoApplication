@@ -5,8 +5,6 @@ import org.springframework.data.annotation.Id;
 
 @Data
 public class RegisterResponse {
-    @Id
-    private String id;
     private String username;
     private String message;
 }
